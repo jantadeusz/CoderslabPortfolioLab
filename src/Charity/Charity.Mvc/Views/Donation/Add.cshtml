@@ -1,0 +1,284 @@
+﻿@model Charity.Mvc.ViewModels.DonationViewModel
+@inject Charity.Mvc.Services.CategoryService cService
+@inject Charity.Mvc.Services.InstitutionService iService
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="stats" class="stats">
+    <div class="container container--85">
+        <div class="stats--item">
+            <em>10</em>
+            <h3>Oddanych worków</h3>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
+        </div>
+        <div class="stats--item">
+            <em>5</em>
+            <h3>Wspartych organizacji</h3>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate quas quam.</p>
+        </div>
+    </div>
+</section>
+
+<section id="steps" class="steps">
+    <h2>Wystarczą 4 proste kroki</h2>
+    <div class="steps--container">
+        <div class="steps--item">
+            <span class="icon icon--hands"></span>
+            <h3>Wybierz rzeczy</h3>
+            <p>ubrania, zabawki, sprzęt i inne</p>
+        </div>
+        <div class="steps--item">
+            <span class="icon icon--arrow"></span>
+            <h3>Spakuj je</h3>
+            <p>skorzystaj z worków na śmieci</p>
+        </div>
+        <div class="steps--item">
+            <span class="icon icon--glasses"></span>
+            <h3>Zdecyduj komu chcesz pomóc</h3>
+            <p>wybierz zaufane miejsce</p>
+        </div>
+        <div class="steps--item">
+            <span class="icon icon--courier"></span>
+            <h3>Zamów kuriera</h3>
+            <p>kurier przyjedzie w dogodnym terminie</p>
+        </div>
+    </div>
+    <a href="#" class="btn btn--large">Załóż konto</a>
+</section>
+
+<section class="form--steps">
+    <div class="form--steps-instructions">
+        <div class="form--steps-container">
+            <h3>Ważne!</h3>
+            <p data-step="1" class="active">
+                Uzupełnij szczegóły dotyczące Twoich rzeczy. Dzięki temu będziemy
+                wiedzieć komu najlepiej je przekazać.
+            </p>
+            <p data-step="2">
+                Uzupełnij szczegóły dotyczące Twoich rzeczy. Dzięki temu będziemy
+                wiedzieć komu najlepiej je przekazać.
+            </p>
+            <p data-step="3">
+                Wybierz jedną, do której trafi Twoja przesyłka.
+            </p>
+            <p data-step="4">Podaj adres oraz termin odbioru rzeczy.</p>
+        </div>
+    </div>
+
+    <div class="form--steps-container">
+        <div class="form--steps-counter">Krok <span>1</span>/4</div>
+
+        <form asp-controller="Donation" asp-action="Add" method="post">
+
+            <!-- STEP 1: class .active is switching steps -->
+            <div data-step="1" class="active">
+                <h3>Zaznacz co chcesz oddać:</h3>
+                <div class="form-group form-group--checkbox" >
+                    @{
+                        int counter = 0;
+                        foreach (CategoryModel cm in cService.GetAll())
+                        {
+                            <div class="form-group form-group--checkbox">
+                                <label class="CategoryInput">
+                                    <input asp-for="CategoriesIds[counter]" type="checkbox" value="@cm.Id" />
+                                    <span class="checkbox"></span>
+                                    <span class="description">@cm.Name</span>
+                                </label>
+                            </div>
+                            counter++;
+                        }
+                    }
+                    <p class="alert-danger"> @Html.ValidationMessageFor(model => model.CategoriesIds) </p>
+                </div>
+                <div class="form-group form-group--buttons">
+                    <button type="button" class="btn next-step">Dalej</button>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div data-step="2">
+                <h3>Podaj liczbę 60l worków, w które spakowałeś/aś rzeczy:</h3>
+                <div class="form-group form-group--inline">
+                    <label>
+                        Liczba 60l worków:
+                        <input asp-for="Quantity" step="1" min="1" id="QuantityInput" />
+                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                        <p class="alert-danger"> @Html.ValidationMessageFor(model => model.Quantity) </p>
+                    </label>
+                </div>
+                <div class="form-group form-group--buttons">
+                    <button type="button" class="btn prev-step">Wstecz</button>
+                    <button type="button" class="btn next-step">Dalej</button>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div data-step="3">
+                <h3>Wybierz organizacje, której chcesz pomóc:</h3>
+                @{
+                    foreach (var im in iService.GetAll())
+                    {
+                        <div class="form-group form-group--checkbox">
+                            <label class="InstitutionInput">
+                                <input type="radio" asp-for="InstitutionId" value="@im.Id" />
+                                <span class="checkbox radio"></span>
+                                <span class="description">
+                                    <div class="title">@im.Name</div>
+                                    <div class="subtitle">@im.Description</div>
+                                </span>
+                            </label>
+                        </div>
+                    }
+                }
+                <div class="form-group form-group--buttons">
+                    <button type="button" class="btn prev-step">Wstecz</button>
+                    <button type="button" class="btn next-step">Dalej</button>
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div data-step="4">
+                <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
+                <div class="form-section form-section--columns">
+                    <div class="form-section--column">
+                        <h4>Adres odbioru</h4>
+                        <div class="form-group form-group--inline">
+                            <label> Ulica <input asp-for="Street" id="StreetInput"/> </label>
+                            <p class="alert-danger"> @Html.ValidationMessageFor(model => model.Street) </p>
+                        </div>
+                        <div class="form-group form-group--inline">
+                            <label> Miasto <input asp-for="City" id="CityInput"/> </label>
+                            <p class="alert-danger"> @Html.ValidationMessageFor(model => model.City) </p>
+                        </div>
+                        <div class="form-group form-group--inline">
+                            <label> Kod pocztowy <input asp-for="ZipCode" id="ZipCodeInput"/> </label>
+                            <p class="alert-danger"> @Html.ValidationMessageFor(model => model.ZipCode) </p>
+                        </div>
+                        <div class="form-group form-group--inline">
+                            <label>Numer telefonu <input asp-for="Phone" id="PhoneInput"/> </label>
+                            <p class="alert-danger"> @Html.ValidationMessageFor(model => model.Phone) </p>
+                        </div>
+                    </div>
+                    <div class="form-section--column">
+                        <h4>Termin odbioru</h4>
+                        <div class="form-group form-group--inline">
+                            <label>
+                                Data i godzina: <input asp-for="PickUpTime" type="datetime-local" id="TimeInput"/>
+                            </label>
+                            <p class="alert-danger"> @Html.ValidationMessageFor(model => model.PickUpTime) </p>
+                        </div>
+                        <div class="form-group form-group--inline">
+                            <label>
+                                Uwagi dla kuriera <textarea asp-for="PickUpComment" rows="5" id="CommentInput"></textarea>
+                                <p class="alert-danger"> @Html.ValidationMessageFor(model => model.PickUpComment) </p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group--buttons">
+                    <button type="button" class="btn prev-step">Wstecz</button>
+                    <button type="button" class="btn next-step" onclick="Trigger()">Dalej</button>
+                </div>
+            </div>
+
+
+            <!-- STEP 5 -->
+            <div data-step="5">
+                <h3>Podsumowanie Twojej darowizny</h3>
+                <div class="summary">
+                    <div class="form-section">
+                        <h4>Oddajesz:</h4>
+                        <ul>
+                            <li>
+                                <span class="icon icon-bag"></span>
+                                <span class="summary--text">
+                                    <span id="QuantityOutput"></span> worków z:
+                                    <span id="CategoryOutput"></span> 
+                                </span>
+                            </li>
+                            <li>
+                                <span class="icon icon-hand"></span>
+                                <span class="summary--text">Dla: </span>
+                                <span class="summary--text" id="InstitutionOutput"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-section form-section--columns">
+                        <div class="form-section--column">
+                            <h4>Adres odbioru:</h4>
+                            <ul>
+                                <li id="StreetOutput"></li>
+                                <li id="CityOutput"></li>
+                                <li id="ZipCodeOutput"></li>
+                                <li id="PhoneOutput"></li>
+                            </ul>
+                        </div>
+                        <div class="form-section--column">
+                            <h4>Termin odbioru:</h4>
+                            <ul>
+                                <li id="TimeOutput"></li>
+                                <li id="CommentOutput"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group--buttons">
+                    <button type="button" class="btn prev-step">Wstecz</button>
+                    <button type="submit" class="btn">Potwierdzam</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</section>
+<script>
+    function Trigger() {
+        getQuantityInput();
+        getCategoryInput();
+        getInstitutionInput();
+        getContactInput();
+    }
+    function getQuantityInput() {
+        var quantityInput = document.getElementById("QuantityInput").value;
+        document.getElementById("QuantityOutput").innerHTML = quantityInput;
+    }
+    function getCategoryInput() {
+        const list = document.getElementsByClassName("CategoryInput");
+        var result = "";
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].firstElementChild.checked == true) {
+                text = list[i].lastElementChild.innerHTML
+                result += text+", ";
+            }
+        }
+        result = result.substring(0, result.length - 1);
+        document.getElementById("CategoryOutput").innerHTML = result;
+    }
+    function getInstitutionInput() {
+        const list = document.getElementsByClassName("InstitutionInput");
+        for (let i = 0; i < list.length; i++) {
+
+            if (list[i].firstElementChild.checked == true) {
+                var children = list[i].children
+                text = children[2].firstElementChild.innerHTML
+                document.getElementById("InstitutionOutput").innerHTML = text;
+            }
+        }
+    }
+    function getContactInput() {
+        var streetInput = document.getElementById("StreetInput").value;
+        document.getElementById("StreetOutput").innerHTML = streetInput;
+        var cityInput = document.getElementById("CityInput").value;
+        document.getElementById("CityOutput").innerHTML = cityInput;
+        var zipCodeInput = document.getElementById("ZipCodeInput").value;
+        document.getElementById("ZipCodeOutput").innerHTML = zipCodeInput;
+        var phoneInput = document.getElementById("PhoneInput").value;
+        document.getElementById("PhoneOutput").innerHTML = phoneInput;
+        var timeInput = document.getElementById("TimeInput").value;
+        document.getElementById("TimeOutput").innerHTML = timeInput;
+        var commentInput = document.getElementById("CommentInput").value;
+        document.getElementById("CommentOutput").innerHTML = commentInput;
+    }
+</script>

@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strona główna - Oddam w dobre ręce</title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <header>
+        <nav class="container container--70 navbar-fixed-top">
+            <ul class="nav--actions">
+                <li><a href="" class="btn btn--small btn--without-border">Zaloguj</a></li>
+                <li><a href="#" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+            </ul>
+            <ul>
+                <li><a asp-controller="Home" asp-action="Index" class="btn btn--without-border active">Start</a></li>
+                <li><a asp-controller="Home" asp-action="AboutIdea" class="btn btn--without-border">O co chodzi?</a></li>
+                <li><a asp-controller="Home" asp-action="AboutUs" class="btn btn--without-border">O nas</a></li>
+                <li><a asp-controller="Home" asp-action="Institutions" class="btn btn--without-border">Fundacje i organizacje</a></li>
+                <li><a asp-controller="Donation" asp-action="Add" class="btn btn--without-border">Przekaż dary</a></li>
+                <li><a asp-controller="Home" asp-action="Contact" class="btn btn--without-border">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    @RenderBody()
+    <!--
+    <footer></footer>
+    -->
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+</body>
+</html>
+

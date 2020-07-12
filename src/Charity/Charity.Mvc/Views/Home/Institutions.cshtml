@@ -1,0 +1,32 @@
+﻿@inject Charity.Mvc.Services.InstitutionService iService
+@{
+    ViewData["Title"] = "Istitutions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="help" class="help">
+    <h2>Komu pomagamy?</h2>
+    <div class="help--slides active" data-id="1">
+        <p>
+            Poniżej znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
+            Spis zawiera nazwy i krótki opis działalności.
+        </p>
+        <ul class="help--slides-items">
+            @{ 
+                var institutions = iService.GetAll();
+                int counter = institutions.Count; }
+            @for (int i = 0; i < counter; i += 2)
+            {
+                <li>
+                    <div class="col">
+                        <div class="title">Fundacja @institutions[i].Name</div>
+                        <div class="subtitle">Cel i misja: @institutions[i].Description</div>
+                    </div>
+                    <div class="col">
+                        <div class="title">Fundacja @institutions[i + 1].Name</div>
+                        <div class="subtitle">Cel i misja: @institutions[i + 1].Description</div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</section>
